@@ -25,7 +25,7 @@ class ServiceRequest extends FormRequest
     {
         return [
             'service_name' => 'required',
-            'logo' => 'required|image|mimes:jpeg,png,jpg|max:2048'
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ];
     }
 
@@ -38,7 +38,6 @@ class ServiceRequest extends FormRequest
     {
         return [
             'service_name.required' => 'Service name is required',
-            'logo.required' => 'Logo is required',
             'logo.mimes' => 'Logo format must JPEG, PNG, JPG',
             'logo.max' => 'Logo size should not be exceeded 2MB'
         ];

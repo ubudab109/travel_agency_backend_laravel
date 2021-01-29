@@ -25,7 +25,7 @@ class ServiceController extends Controller
     /**
      * Display a listing of the resource.
      * @param Illuminate\Http\Request
-     * @return \Illuminate\Http\Response
+     * @return DataTables
      */
     public function index(Request $request)
     {
@@ -34,15 +34,19 @@ class ServiceController extends Controller
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    $btn = '<button type="button" rel="tooltip" class="btn btn-success">
+                    $btn = '<a href=' . route('services.edit', $row->id) . '><button type="button" rel="tooltip" class="btn btn-success">
                                 <i class="material-icons">edit</i>
-                            </button>
+                            </button></a>
                             <button onClick="deleteService(' . $row->id . ', this)" type="button" rel="tooltip" class="btn btn-danger">
                                 <i class="material-icons">delete</i>
                             </button>';
                     return $btn;
                 })->editColumn('logo', function ($row) {
-                    $icon = Storage::url('serviceicon/' . $row->logo);
+                    if ($row->logo != 'icon.png') {
+                        $icon = Storage::url('serviceicon/' . $row->logo);
+                    } else {
+                        $icon = Storage::url('serviceicon/default/' . $row->logo);
+                    }
                     $img = '<div class="img-container">
                                 <img src="' . $icon . '" rel="nofollow" alt="...">
                             </div>';
@@ -73,20 +77,18 @@ class ServiceController extends Controller
     public function store(ServiceRequest $request)
     {
         $input = $request->all();
-        $validate = $request->validated();
+        $request->validated();
+
+        if ($request->hasFile('logo')) {
+            $image = $request->file('logo');
+            $name = Str::slug($request->input('service_name') . '_' . time());
+            $folder = '/serviceicon';
+            $imgName = $name . '.' . $image->getClientOriginalExtension();
+            $this->uploadOne($image, $folder, 'public', $name);
+            $input['logo'] = $imgName;
+        }
 
         try {
-            if ($request->hasFile('logo')) {
-                $image = $request->file('logo');
-                $name = Str::slug($request->input('service_name') . '_' . time());
-                $folder = '/ServiceIcon';
-                $imgName = $name . '.' . $image->getClientOriginalExtension();
-                $this->uploadOne($image, $folder, 'public', $name);
-                $input['logo'] = $imgName;
-            }
-            if (!$validate) {
-                return back()->with('erros', $request->messages()->all())->withInput();
-            }
             $this->service_repo->createOrUpdate(null, $input);
             return redirect()->route('services.index')->withSuccess('Service Add Succesfully');
         } catch (\Exception $e) {
@@ -113,6 +115,8 @@ class ServiceController extends Controller
      */
     public function edit($id)
     {
+        $service = $this->service_repo->getServiceId($id);
+        return view('content.Services._form-edit', compact('service'));
     }
 
     /**
@@ -122,9 +126,32 @@ class ServiceController extends Controller
      * @param  \App\Service  $service
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Service $service)
+    public function update(ServiceRequest $request, $id)
     {
-        //
+        $input = $request->all();
+        $request->validated();
+        $service = $this->service_repo->getServiceId($id);
+
+        if ($request->hasFile('logo')) {
+            $image = $request->file('logo');
+            $name = Str::slug($request->input('service_name') . '_' . time());
+            $folder = '/serviceicon';
+            $imgOld = $service->logo;
+            $pathToImgOld = $folder . '/';
+            $this->deleteImages($pathToImgOld, $imgOld, 'public');
+            $imgName = $name . '.' . $image->getClientOriginalExtension();
+            $this->uploadOne($image, $folder, 'public', $name);
+            $input['logo'] = $imgName;
+        } else {
+            $imgName = $service->logo;
+            $input['logo'] = $imgName;
+        }
+        try {
+            $this->service_repo->createOrUpdate($id, $input);
+            return redirect()->route('services.index')->withSuccess('Service Update Succesfully');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('errors', $e);
+        }
     }
 
     /**

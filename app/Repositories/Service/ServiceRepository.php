@@ -34,6 +34,12 @@ class ServiceRepository extends BaseRepository implements ServiceRepositoryInter
             return $service;
         } else {
             $service = $this->model->find($id);
+            if ($service->logo != null) {
+                $data['logo'];
+            } else {
+                $data['new_logo'];
+            }
+
             return $service->update($data);
         }
     }

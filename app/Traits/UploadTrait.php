@@ -15,4 +15,16 @@ trait UploadTrait
 
         return $file;
     }
+
+    function uploadMultiple(UploadedFile $uploadedFile, $folder = null, $disk = 'public', $filename = [])
+    {
+        if (!is_null($filename)) {
+            $data = [];
+            foreach ($filename as $image) {
+                $file = $uploadedFile->storeAs($folder, $image, '.' . $uploadedFile->getClientOriginalExtension(), $disk);
+                array_push($data, $file);
+            }
+        }
+        return $data;
+    }
 }

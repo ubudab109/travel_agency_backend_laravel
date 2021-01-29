@@ -12,7 +12,6 @@ trait DeleteImagesTrait
         $image = $folder . $filename;
         $exist = Storage::disk($disk)->exists($image);
         if ($exist) {
-
             $unlink = Storage::disk($disk)->delete($image);
         } else {
             $unlink = "File Not Exist";

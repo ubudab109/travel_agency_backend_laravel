@@ -1,56 +1,78 @@
 @extends('layouts._header')
 @section('content')
-<div class="table-responsive">
-    <table class="table table-shopping">
-        <thead>
-            <tr>
-                <th class="text-center"></th>
-                <th>Product</th>
-                <th class="th-description">Color</th>
-                <th class="th-description">Size</th>
-                <th class="text-right">Price</th>
-                <th class="text-right">Qty</th>
-                <th class="text-right">Amount</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>
-                    <div class="img-container">
-                        <img src="https://images.thenorthface.com/is/image/TheNorthFace/NF0A2VFL_619_hero" rel="nofollow" alt="...">
-                    </div>
-                </td>
-                <td class="td-name">
-                    <a href="#jacket">Spring Jacket</a>
-                    <br><small>by Dolce&amp;Gabbana</small>
-                </td>
-                <td>
-                    Red
-                </td>
-                <td>
-                    M
-                </td>
-                <td class="td-number">
-                    <small>&#x20AC;</small>549
-                </td>
-                <td class="td-number">
-                    1
-                    <div class="btn-group">
-                        <button class="btn btn-round btn-info btn-sm"> <i class="material-icons">remove</i> </button>
-                        <button class="btn btn-round btn-info btn-sm"> <i class="material-icons">add</i> </button>
-                    </div>
-                </td>
-                <td class="td-number">
-                    <small>&#x20AC;</small>549
-                </td>
-                <td class="td-actions">
-                    <button type="button" rel="tooltip" data-placement="left" title="Remove item" class="btn btn-simple">
-                        <i class="material-icons">close</i>
-                    </button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+<div class="col-md-12">
+    <div class="card">
+      <div class="card-header card-header-primary">
+        <h4 class="card-title ">Payment List</h4>
+        <p class="card-category"> Here is a payment list</p>
+        <div class="text-right">
+            <a href="{{ route('payments.create') }}" class="btn btn-primary btn-info">
+                <i class="material-icons">library_add</i> Add New Payment
+              </a>
+          </div>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table" id="payment-list">
+            <thead class=" text-primary">
+              <th>Payment Name</th>
+              <th>Created At</th>
+              <th>Action</th>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   </div>
+@endsection
+@section('script')
+    <script>
+        $(document).ready(function(){
+            var table = $('#payment-list').DataTable({
+                processing:true,
+                serverSide:true,
+                ajax: "{{route('payments.index')}}",
+                columns:[
+                    {data: 'payment_name', name:'payment_name'},
+                    {data: 'created_at', name:'created_at'},
+                    {data: 'action', name: 'action', orderable: false, searchable: false, className:'td-actions'},
+                ]
+            })
+        })
+
+        function deletePayment(id, ele) {
+            var url = "{{route('payments.destroy', ':id')}}";
+            url = url.replace(':id', id);
+            var tr = $(ele).closest('tr');
+
+            swal({
+                title: 'Are you sure?',
+                text: 'This record and it`s details will be permanantly deleted!',
+                icon: 'warning',
+                buttons: ["Cancel", "Yes!"],
+            }).then(function (value) {
+                if(value){
+                    $.ajax({
+                    type:'DELETE',
+                    headers:{
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: url,
+                    success:function (res) {
+                        setTimeout(() => {
+                            tr.fadeOut(500, function () {
+                                tr.remove();
+                            })
+                        }, 300);
+                    },
+                    error:function (res) {
+                        alert("There's Something Wrong, Please Try Again");
+                    }
+                })
+                }
+            })
+        }
+    </script>
 @endsection

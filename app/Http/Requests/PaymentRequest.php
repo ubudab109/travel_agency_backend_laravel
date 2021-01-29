@@ -27,4 +27,16 @@ class PaymentRequest extends FormRequest
             'payment_name' => 'required'
         ];
     }
+
+    /**
+     * Message if validation fails
+     *
+     * @return message each name field
+     */
+    public function messages()
+    {
+        return [
+            'payment_name.required' => 'Payment name is required',
+        ];
+    }
 }

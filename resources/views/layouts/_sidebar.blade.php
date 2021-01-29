@@ -18,10 +18,10 @@
                     <p>Service</p>
                 </a>
             </li>
-            <li class="nav-item ">
-                <a class="nav-link" href="#">
-                    <i class="material-icons">content_paste</i>
-                    <p>Table List</p>
+            <li class="nav-item {{set_active(['payments*'])}}">
+                <a class="nav-link" href="{{ route('payments.index') }}">
+                    <i class="material-icons">payment</i>
+                    <p>Payment List</p>
                 </a>
             </li>
             <li class="nav-item ">

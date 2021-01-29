@@ -9,7 +9,7 @@
             <a href="{{ route('services.create') }}" class="btn btn-primary btn-info">
                 <i class="material-icons">library_add</i> Add Service
               </a>
-          </div>
+        </div>
       </div>
       <div class="card-body">
         <div class="table-responsive">
@@ -45,7 +45,6 @@
         })
 
         function deleteService(id, ele){
-            // e.preventDefault();
             var url = "{{route('services.destroy', ':id')}}";
             url = url.replace(':id', id);
             var tr = $(ele).closest('tr');

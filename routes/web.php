@@ -19,4 +19,5 @@ Auth::routes();
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/', 'HomeController@index')->name('dashboard');
     Route::resource('services', 'ServiceController')->names('services');
+    Route::resource('payments', 'PaymentController')->names('payments');
 });
