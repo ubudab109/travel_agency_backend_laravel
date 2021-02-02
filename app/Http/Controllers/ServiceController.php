@@ -9,6 +9,7 @@ use App\Traits\DeleteImagesTrait;
 use App\Traits\UploadTrait;
 use Illuminate\Http\Request;
 use DataTables;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
@@ -89,9 +90,12 @@ class ServiceController extends Controller
         }
 
         try {
+            DB::beginTransaction();
             $this->service_repo->createOrUpdate(null, $input);
+            DB::commit();
             return redirect()->route('services.index')->withSuccess('Service Add Succesfully');
         } catch (\Exception $e) {
+            DB::rollBack();
             return redirect()->back()->with('errors', $e);
         }
     }

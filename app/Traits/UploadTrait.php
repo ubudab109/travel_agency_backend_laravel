@@ -12,19 +12,21 @@ trait UploadTrait
     {
         $name = !is_null($filename) ? $filename : Str::random(25);
         $file = $uploadedFile->storeAs($folder, $name . '.' . $uploadedFile->getClientOriginalExtension(), $disk);
-
         return $file;
     }
 
     function uploadMultiple(UploadedFile $uploadedFile, $folder = null, $disk = 'public', $filename = [])
     {
-        if (!is_null($filename)) {
-            $data = [];
-            foreach ($filename as $image) {
-                $file = $uploadedFile->storeAs($folder, $image, '.' . $uploadedFile->getClientOriginalExtension(), $disk);
-                array_push($data, $file);
-            }
+        $data = [];
+
+        // if (is_array($filename)) {
+        foreach ($filename as $image) {
+            $name = !is_null($image) ? $image : Str::random(25);
+            $file = $uploadedFile->storeAs($folder, $name . '.' . $uploadedFile->getClientOriginalExtension(), $disk);
+            array_push($data, $file);
+            // $data[] = $file;
         }
+        // }
         return $data;
     }
 }

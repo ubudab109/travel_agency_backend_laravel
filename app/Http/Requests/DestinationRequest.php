@@ -25,9 +25,27 @@ class DestinationRequest extends FormRequest
     {
         return [
             'destination_name' => 'required',
-            'price' => 'required|number',
+            'price' => 'required|numeric',
             'description' => 'required',
-            'maps_url' => 'required'
+            'maps_url' => 'nullable',
+        ];
+    }
+
+    /**
+     * Message if validation fails
+     *
+     * @return message each name field
+     */
+    public function messages()
+    {
+        return [
+            'destination_name.required' => 'Destination name is required',
+            'price.required' => 'Price required',
+            'price.number' => 'Price must be a number',
+            'description.required' => 'Description required',
+            // 'service_id.required' => 'Service required',
+            // 'destination_image.mimes' => 'Image format must JPEG, PNG, JPG',
+            // 'destination_image.max' => 'Image size should not be exceeded 2MB'
         ];
     }
 }

@@ -9,5 +9,5 @@ interface DestinationRepositoryInterface
 
     public function getDestinationId($id);
 
-    public function createOrUpdateDestination($id = null);
+    public function createOrUpdateDestination($id = null, $data);
 }

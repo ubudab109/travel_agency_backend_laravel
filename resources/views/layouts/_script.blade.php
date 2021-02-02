@@ -41,6 +41,7 @@
 <script src="{{ asset('Admin/js/material-dashboard.js?v=2.1.2') }}" type="text/javascript"></script>
 <!-- Material Dashboard DEMO methods, don't include it in your project! -->
 <script src="{{ asset('Admin/demo/demo.js') }}"></script>
+<script type="text/javascript" src="{{ asset('Dropzone/image-uploader.js') }}"></script>
 <script>
     $(document).ready(function() {
     $().ready(function() {

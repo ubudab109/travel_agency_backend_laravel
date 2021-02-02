@@ -15,7 +15,9 @@
     <link href="{{ asset('Admin/css/material-dashboard.css?v=2.1.2') }}" rel="stylesheet" />
     <!-- CSS Just for demo purpose, don't include it in your project -->
     <link href="{{ asset('Admin/demo/demo.css') }}" rel="stylesheet" />
+    <link type="text/css" rel="stylesheet" href="{{ asset('Dropzone/image-uploader.css') }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css">
+    <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     @yield('style')
     <script src="{{ asset('js/jquery-3.5.1.js') }}"></script>
 </head>
